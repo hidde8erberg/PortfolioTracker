@@ -13,23 +13,33 @@ class Controller:
         self.dashboard.app.callback(
             Output('ticker_graph', 'figure'),
             Output('portfolio_table', 'data'),
+            Output('pie_asset', 'figure'),
+            Output('pie_sector', 'figure'),
+            Output('pie_class', 'figure'),
+            Output('total_value', 'children'),
             Input('add_ticker', 'n_clicks'),
             State('ticker_name', 'value'),
             State('ticker_amount', 'value'),
-            State('ticker_price', 'value'),
-            prevent_initial_call=True)(self.add_ticker)
+            State('ticker_price', 'value'))(self.add_ticker)
 
     def run(self):
         self.dashboard.app.run(debug=True)
 
-    def add_ticker(self, n_clicks, name, amount, price):
+    def add_ticker(self, n_clicks: int, name: str, amount: str, price: str):
+        if n_clicks == 0:
+            return px.line([]), [], px.pie(), px.pie(), px.pie(), "0"
         name = name.upper()
-        if name == '' or amount is None or price is None:
+        if name == '' or amount == '' or price == '':
             raise exceptions.PreventUpdate
         if not self.portfolio.add_asset(name, amount, price):
             raise exceptions.PreventUpdate
 
         df = self.portfolio.get_asset_history()
         table = self.portfolio.get_portfolio().to_dict('records')
+        pie = self.portfolio.get_portfolio().to_dict('records')
 
-        return px.line(df, x="Date", y="Close", color="Ticker"), table
+        return (px.line(df, x="Date", y="Close", color="Ticker", title=""), table,
+                px.pie(pie, names='Name', values='Current value').update_layout(autosize=False),
+                px.pie(pie, names='Sector', values='Current value').update_layout(autosize=False),
+                px.pie(pie, names='Asset class', values='Current value').update_layout(autosize=False),
+                str(round(self.portfolio.get_portfolio()['Current value'].sum(), 2)))

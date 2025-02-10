@@ -1,14 +1,15 @@
 import pandas as pd
 import yfinance as yf
 
+
 class Asset:
-    def __init__(self, name, quantity, purchase_price, dat):
+    def __init__(self, name: str, quantity: str, purchase_price: str, dat):
         self.name = name
         self.purchase_price = float(purchase_price)
-        self.quantity = int(quantity)
+        self.quantity = float(quantity)
 
-        self.sector = dat.info['sector']
-        self.asset_class = dat.info['longBusinessSummary']
+        self.sector = dat.info.get('sector', 'Unknown')
+        self.asset_class = dat.info.get('quoteType', 'Unknown') # classify_asset_class(self.sector)
         self.history = dat.history(period='1y')[['Close']].reset_index()
         self.history['Ticker'] = name
 
@@ -19,7 +20,7 @@ class Portfolio:
     def __init__(self):
         self.assets = []
 
-    def add_asset(self, asset, quantity, price):
+    def add_asset(self, asset: str, quantity: str, price: str) -> bool:
         dat = yf.Ticker(asset)
         if dat.history(period='1d').empty:
             print(f'Could not find data for {asset}')
@@ -31,7 +32,7 @@ class Portfolio:
         return pd.concat([asset.history for asset in self.assets]).drop_duplicates(['Ticker', 'Date'])
 
     def get_portfolio(self):
-        return pd.DataFrame([{'Name': asset.name, 'Sector': asset.sector, 'Asset class': asset.sector,
+        return pd.DataFrame([{'Name': asset.name, 'Sector': asset.sector, 'Asset class': asset.asset_class,
                               'Quantity': asset.quantity, 'Price': asset.purchase_price,
                               'Transaction value': asset.quantity*asset.purchase_price,
-                              'Current value': asset.quantity*asset.history.iloc[-1]['Close']} for asset in self.assets])
+                              'Current value': round(asset.quantity*asset.history.iloc[-1]['Close'], 2)} for asset in self.assets])
