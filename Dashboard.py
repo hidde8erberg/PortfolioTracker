@@ -8,7 +8,7 @@ class Dashboard:
             html.Div(children=[
                 html.Div(children=[
                     html.Div(children=[
-                        # 'Add a new asset',
+                        # "Add a new asset",
                         html.Div(dcc.Input(
                           id="ticker_name".format("text"),
                           type="text",
@@ -21,20 +21,22 @@ class Dashboard:
                           id="ticker_price".format("text"),
                           type="text",
                           placeholder="Price".format("text"))),
-                        html.Button('ADD ASSET', id='add_ticker', n_clicks=0),
-                        html.H2("Total Portfolio Value", style={'marginBottom': '0px'}),
-                        html.H2(id="total_value")
-                    ], style={'width': '15%', 'display': 'flex', 'flexDirection': 'column', 'alignItems': 'center', 'justifyContent': 'center'}),
-                    dcc.Graph(id="ticker_graph", style={'width': '70%', 'height': '40vh'}),
-                ], style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center'}),
+                        html.Button("ADD ASSET", id="add_ticker", n_clicks=0),
+                        html.H2("Total Portfolio Value", style={"marginBottom": "0px"}),
+                        html.H2(id="total_value", style={"marginTop": "0px"}),
+                        html.H3("P/L", style={"marginBottom": "0px", "marginTop": "0px"}),
+                        html.H3(id="pl_value", style={"marginTop": "0px"})
+                    ], style={"width": "15%", "display": "flex", "flexDirection": "column", "alignItems": "center", "justifyContent": "center"}),
+                    dcc.Graph(id="ticker_graph", style={"width": "70%", "height": "40vh", "margin": "0px", "padding": "0px"}),
+                ], style={"display": "flex", "alignItems": "center", "justifyContent": "center"}),
                 html.Div(children=[
-                    dcc.Graph(id="pie_asset", style={"width": "30%", 'height': "30vh"}),
+                    dcc.Graph(id="pie_asset", style={"width": "30%", "height": "40vh"}),
                     dcc.Graph(id="pie_sector", style={"width": "30%"}),
                     dcc.Graph(id="pie_class", style={"width": "30%"})
                 ], style={"display": "flex", "justifyContent": "center"}),
-                dash_table.DataTable(id='portfolio_table', page_action='none',
+                dash_table.DataTable(id="portfolio_table", page_action="none",
                                      sort_action="native",
-                                     style_table={'width': '90%', "margin": "auto", 'height': '300px', 'overflowY': 'auto'}),
+                                     style_table={"width": "90%", "margin": "auto", "height": "300px", "overflowY": "auto"}),
 
             ])
         ]
