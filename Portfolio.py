@@ -19,7 +19,7 @@ class Asset:
 class Portfolio:
     def __init__(self):
         self.assets = []
-        # self.add_from_file()
+        self.add_from_file()
 
     def add_asset(self, asset: str, quantity: str, price: str) -> bool:
         dat = yf.Ticker(asset)

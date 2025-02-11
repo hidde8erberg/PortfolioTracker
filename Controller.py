@@ -24,17 +24,17 @@ class Controller:
             State("ticker_amount", "value"),
             State("ticker_price", "value"))(self.add_ticker)
 
+
     def run(self):
         self.dashboard.app.run(debug=True)
 
     def add_ticker(self, n_clicks: int, name: str, amount: str, price: str):
-        if n_clicks == 0:
-            return px.line([]), [], px.pie(), px.pie(), px.pie(), "0", "0"
-        name = name.upper()
-        if name == "" or amount == "" or price == "":
-            raise exceptions.PreventUpdate
-        if not self.portfolio.add_asset(name, amount, price):
-            raise exceptions.PreventUpdate
+        if n_clicks > 0:
+            name = name.upper()
+            if name == "" or amount == "" or price == "":
+                raise exceptions.PreventUpdate
+            if not self.portfolio.add_asset(name, amount, price):
+                raise exceptions.PreventUpdate
 
         df = self.portfolio.get_asset_history()
         table = self.portfolio.get_portfolio().to_dict("records")
