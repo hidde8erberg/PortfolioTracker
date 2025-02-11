@@ -8,6 +8,7 @@ from Portfolio import Portfolio
 class Controller:
     def __init__(self):
         self.portfolio = Portfolio()
+
         self.dashboard = Dashboard(self.portfolio)
 
         self.dashboard.app.callback(

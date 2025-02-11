@@ -19,6 +19,7 @@ class Asset:
 class Portfolio:
     def __init__(self):
         self.assets = []
+        # self.add_from_file()
 
     def add_asset(self, asset: str, quantity: str, price: str) -> bool:
         dat = yf.Ticker(asset)
@@ -38,3 +39,14 @@ class Portfolio:
                               "Current value": round(asset.quantity*asset.history.iloc[-1]["Close"], 2),
                               "Profit": round(asset.quantity*asset.history.iloc[-1]["Close"] - asset.quantity*asset.purchase_price, 2),
                               } for asset in self.assets])
+
+    def save_to_file(self, n_clicks: int):
+        df = pd.DataFrame([asset.__dict__ for asset in self.assets])
+        df.to_csv("assets.csv", index=False)
+
+    def add_from_file(self):
+        print("Initializing Portfolio and loading assets from file...")
+        df = pd.read_csv("assets.csv")
+        for _, row in df.iterrows():
+            self.add_asset(row["name"], row["quantity"], row["purchase_price"])
+

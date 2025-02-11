@@ -8,7 +8,6 @@ class Dashboard:
             html.Div(children=[
                 html.Div(children=[
                     html.Div(children=[
-                        # "Add a new asset",
                         html.Div(dcc.Input(
                           id="ticker_name".format("text"),
                           type="text",
